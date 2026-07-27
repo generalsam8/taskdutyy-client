@@ -1,0 +1,25 @@
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
+import "./index.css";
+import App from "./App";
+import TaskProvider from "./Context/TaskContext";
+import UserProvider from "./Context/UserContext";
+
+const rootElement = document.getElementById("root");
+
+if (!rootElement) {
+  throw new Error("Root element not found");
+}
+
+createRoot(rootElement).render(
+  <StrictMode>
+    <UserProvider>
+      <TaskProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </TaskProvider>
+    </UserProvider>
+  </StrictMode>
+);
