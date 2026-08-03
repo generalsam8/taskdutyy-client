@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from "react";
-import Layout from "../Layout/Layout";
 import { Link } from "react-router-dom";
+import Layout from "../Layout/Layout";
 import TaskCard from "../Components/TaskCard";
-import { TaskContext } from "../Context/TaskContext";
 import Loader from "../Components/Loader";
+import { TaskContext } from "../Context/TaskContext";
 
 export default function AllTask() {
   const context = useContext(TaskContext);
@@ -14,8 +14,8 @@ export default function AllTask() {
 
   const { allTask, getTasks } = context;
 
-  const [loading, setLoading] = useState<boolean>(true);
-  const [query, setQuery] = useState<string>("");
+  const [loading, setLoading] = useState(true);
+  const [query, setQuery] = useState("");
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -31,14 +31,21 @@ export default function AllTask() {
     };
 
     fetchTasks();
-  }, [getTasks]);
 
-  const filteredTasks = allTask.filter(
-    (task) =>
-      task.title.toLowerCase().includes(query.toLowerCase()) ||
-      task.description.toLowerCase().includes(query.toLowerCase()) ||
-      task.tag.toLowerCase().includes(query.toLowerCase())
-  );
+    // Run only once when the page loads.
+    // If ESLint warns about getTasks, wrap it in useCallback inside TaskContext.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const filteredTasks = allTask.filter((task) => {
+    const search = query.toLowerCase();
+
+    return (
+      task.title.toLowerCase().includes(search) ||
+      task.description.toLowerCase().includes(search) ||
+      task.tag.toLowerCase().includes(search)
+    );
+  });
 
   return (
     <Layout>
