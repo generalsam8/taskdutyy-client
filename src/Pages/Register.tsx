@@ -11,8 +11,9 @@ interface RegisterFormData {
   email: string;
   username: string;
   password: string;
-  confirmPassword: string;
+  confirmPassword?: string;
 }
+type RegisterPayload = Omit<RegisterFormData, "confirmPassword">;
 
 export default function Register() {
   const context = useContext(UserContext);
@@ -79,11 +80,12 @@ export default function Register() {
       setLoading(true);
 
       // Adjust the payload if your API expects "name" instead of "username"
-      await register({
+       const registerPayload: RegisterPayload = {
         email: formData.email,
         password: formData.password,
-        name: formData.username,
-      });
+        username: formData.username,
+      };
+      await register(registerPayload);
 
       toast.success("Registration Successful");
       navigate("/login");
